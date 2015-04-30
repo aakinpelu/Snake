@@ -8,7 +8,7 @@ import javax.swing.JFrame;
 public class SnakeFrame extends JFrame {
 	
 	public SnakeFrame() {
-		setLayout(new GridLayout(1,1,0,0));
+		setLayout(new GridLayout());
 		
 		SnakeGraphics graphics = new SnakeGraphics();
 		add(graphics);

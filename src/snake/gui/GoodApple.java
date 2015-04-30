@@ -3,10 +3,10 @@ package snake.gui;
 import java.awt.Color;
 import java.awt.Graphics;
 
-public class Apple {
+public class GoodApple {
 	private int x, y, width, height;
 	
-	public Apple(int x, int y, int tileSize) {
+	public GoodApple(int x, int y, int tileSize) {
 		this.x = x;
 		this.y = y;
 		width = tileSize;
@@ -16,10 +16,6 @@ public class Apple {
 	public void paint(Graphics g) {
 		g.setColor(Color.red);
 		g.fillOval(x * width, y * height, width, height);
-	}
-	
-	public void tick() {
-		
 	}
 	
 	public int getX() {
