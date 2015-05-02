@@ -1,4 +1,4 @@
-package snake.gui;
+package snake;
 
 import java.awt.Color;
 import java.awt.GridLayout;
@@ -15,15 +15,12 @@ public class SnakeFrame extends JFrame {
 		
 		pack();
 		setTitle("Play Snake");
-		setBackground(Color.black);
-//		setResizable(false);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setVisible(true);
 	}
 	
 	public static void main(String[] args) {
 		new SnakeFrame();
-		
 	}
 	
 }

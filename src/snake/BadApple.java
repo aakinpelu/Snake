@@ -1,4 +1,4 @@
-package snake.gui;
+package snake;
 
 import java.awt.Color;
 import java.awt.Graphics;

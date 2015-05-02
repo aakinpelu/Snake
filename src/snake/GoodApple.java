@@ -1,12 +1,12 @@
-package snake.gui;
+package snake;
 
 import java.awt.Color;
 import java.awt.Graphics;
 
-public class Snake {
+public class GoodApple {
 	private int x, y, width, height;
 	
-	public Snake(int x, int y, int tileSize) {
+	public GoodApple(int x, int y, int tileSize) {
 		this.x = x;
 		this.y = y;
 		width = tileSize;
@@ -14,12 +14,10 @@ public class Snake {
 	}
 	
 	public void paint(Graphics g) {
-		g.setColor(Color.black);
-		g.fillRect(x * width, y * height, width, height);
-		g.setColor(Color.green);
-		g.fillRect(x * width + 2, y * height + 2, width - 2, height - 2);
+		g.setColor(Color.red);
+		g.fillOval(x * width, y * height, width, height);
 	}
-
+	
 	public int getX() {
 		return x;
 	}
