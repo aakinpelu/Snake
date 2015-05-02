@@ -1,4 +1,4 @@
-package snake;
+package snake.build;
 
 import java.awt.Color;
 import java.awt.Dimension;
@@ -10,16 +10,22 @@ import java.util.Random;
 
 import javax.swing.JPanel;
 
+import snake.fruit.Apple;
+import snake.fruit.BadApple;
+
+
 public class SnakeGraphics extends JPanel implements Runnable {
+	private static SnakeGraphics graphics = null;
+	
 	final int WIDTH = 300, HEIGHT = 300;
 	private boolean gameRun = false;
 	private Thread thread;
 	
-	private Snake snakePart;
-	private ArrayList<Snake> snake;
+	private SnakeBuild snakePart;
+	private ArrayList<SnakeBuild> snakeBuild;
 	
-	private GoodApple goodApple;
-	private ArrayList<GoodApple> goodApples;
+	private Apple apple;
+	private ArrayList<Apple> apples;
 	private Random rand;
 	
 	private BadApple badApple;
@@ -27,18 +33,18 @@ public class SnakeGraphics extends JPanel implements Runnable {
 	
 	private int x, y, size = 5;
 	
-	private long ticks;
+	private long moves;
 	private boolean right = true;
 	private boolean up = false;
 	private boolean down = false;
 	private boolean left = false;
 	
-	public SnakeGraphics() {
+	private SnakeGraphics() {
 		setFocusable(true);
 		addKeyListener(new Move());
 		
-		snake = new ArrayList<Snake>();
-		goodApples = new ArrayList<GoodApple>();
+		snakeBuild = new ArrayList<SnakeBuild>();
+		apples = new ArrayList<Apple>();
 		badApples = new ArrayList<BadApple>();
 		rand = new Random();
 		
@@ -46,56 +52,58 @@ public class SnakeGraphics extends JPanel implements Runnable {
 		start();
 	}
 	
+	public static SnakeGraphics getSnakeGraphics() {		
+		if (graphics == null) {
+			SnakeGraphics graphics2 = new SnakeGraphics();
+			graphics = graphics2;
+		}
+		return graphics;
+	}
+	
 	public void paint(Graphics g) {
-		g.setColor(Color.white);
 		g.clearRect(0, 0, WIDTH, HEIGHT);
-		setBackground(Color.black);
-		for(int i = 0; i < WIDTH / 10; i++) {
-			g.drawLine(i * 10, 0, i * 10, HEIGHT);
+		
+		for(int i = 0; i < snakeBuild.size(); i++) {
+			snakeBuild.get(i).paint(g);
 		}
 		
-		for(int i = 0; i < HEIGHT / 10; i++) {
-			g.drawLine(0, i * 10, WIDTH, i * 10);
-		}
-		
-		for(int i = 0; i < snake.size(); i++) {
-			snake.get(i).paint(g);
-		}
-		
-		for(int i = 0; i < goodApples.size(); i++) {
-			goodApples.get(i).paint(g);
+		for(int i = 0; i < apples.size(); i++) {
+			apples.get(i).paint(g);
 		}
 		
 		for(int i = 0; i < badApples.size(); i++) {
 			badApples.get(i).paint(g);
 		}
 	}
-	
-	public void tick() {
-		if(snake.size() == 0) {
-			snakePart = new Snake(x, y, 10);
-			snake.add(snakePart);
+
+	public boolean isGameRun() {
+		return gameRun;
+	}
+
+	public void snakeChange() {
+		if(snakeBuild.size() == 0) {
+			snakePart = new SnakeBuild(x, y);
+			snakeBuild.add(snakePart);
 		}
 		
-		if(goodApples.size() == 0) {
+		if(apples.size() == 0) {
 			int x = rand.nextInt(29);
 			int y = rand.nextInt(29);
 			
-			goodApple = new GoodApple(x,y, 10);
-			goodApples.add(goodApple);
+			apple = new Apple(x,y);
+			apples.add(apple);
 			
 			int x2 = rand.nextInt(29);
 			int y2 = rand.nextInt(29);
 			
-			badApple = new BadApple(x2,y2, 10);
+			badApple = new BadApple(x2,y2);
 			badApples.add(badApple);
 		}
 		
-		for(int i = 0; i < goodApples.size(); i++) {
-			if(x == goodApples.get(i).getX() && y == goodApples.get(i).getY()) {
+		for(int i = 0; i < apples.size(); i++) {
+			if(x == apples.get(i).getX() && y == apples.get(i).getY()) {
 				size++;
-				goodApples.remove(i);
-				i--;
+				apples.remove(i);
 			}
 		}
 		
@@ -105,21 +113,12 @@ public class SnakeGraphics extends JPanel implements Runnable {
 			}
 		}
 		
-		for(int i = 0; i < goodApples.size(); i++) {
-			if(x == snake.get(i).getX() && y == snake.get(i).getY()) {
-				if(i != snake.size() - 1) {
-					stop();
-				}
-			}
-		}
-		
 		if(x < 0 || x > 29 || y < 0 || y > 29) {
 			stop();
 		}
 		
-		ticks++;
-		
-		if(ticks > 250000) {
+		moves++;
+		if(moves > 500000) {
 			if(right) {
 				x++;
 			} else if(up) {
@@ -129,20 +128,20 @@ public class SnakeGraphics extends JPanel implements Runnable {
 			} else if(left) {
 				x--;
 			}
-			ticks = 0;
+			moves = 0;
 			
-			snakePart = new Snake(x, y, 10);
-			snake.add(snakePart);
+			snakePart = new SnakeBuild(x, y);
+			snakeBuild.add(snakePart);
 			
-			if(snake.size() > size) {
-				snake.remove(0);
+			if(snakeBuild.size() > size) {
+				snakeBuild.remove(0);
 			}
 		}
 	}
 	
 	public void start(){
 		gameRun = true;
-		thread = new Thread(this, "Game loop");
+		thread = new Thread(this, "snake");
 		thread.start();
 	}
 	
@@ -157,7 +156,7 @@ public class SnakeGraphics extends JPanel implements Runnable {
 	
 	public void run(){
 		while(gameRun) {
-			tick();
+			snakeChange();
 			repaint();
 		}
 	}
@@ -190,6 +189,11 @@ public class SnakeGraphics extends JPanel implements Runnable {
 				up = true;
 				right = false;
 				left = false;
+			}
+			
+			if(gameRun == false && key == KeyEvent.KEY_PRESSED) {
+				gameRun = true;
+				start();
 			}
 		}
 

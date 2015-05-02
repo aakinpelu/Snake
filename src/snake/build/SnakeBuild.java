@@ -1,23 +1,21 @@
-package snake;
+package snake.build;
 
 import java.awt.Color;
 import java.awt.Graphics;
 
-public class Snake {
-	private int x, y, width, height;
+public class SnakeBuild {
+	private int x, y, width = 10, height = 10;
 	
-	public Snake(int x, int y, int tileSize) {
+	public SnakeBuild(int x, int y) {
 		this.x = x;
 		this.y = y;
-		width = tileSize;
-		height = tileSize;
 	}
 	
 	public void paint(Graphics g) {
 		g.setColor(Color.black);
 		g.fillRect(x * width, y * height, width, height);
 		g.setColor(Color.green);
-		g.fillRect(x * width + 2, y * height + 2, width - 2, height - 2);
+		g.fillRect(x * width, y * height, width - 2, height - 2);
 	}
 
 	public int getX() {

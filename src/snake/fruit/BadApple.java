@@ -1,20 +1,18 @@
-package snake;
+package snake.fruit;
 
 import java.awt.Color;
 import java.awt.Graphics;
 
-public class GoodApple {
-	private int x, y, width, height;
+public class BadApple {
+private int x, y, width = 10, height = 10;
 	
-	public GoodApple(int x, int y, int tileSize) {
+	public BadApple(int x, int y) {
 		this.x = x;
 		this.y = y;
-		width = tileSize;
-		height = tileSize;
 	}
 	
 	public void paint(Graphics g) {
-		g.setColor(Color.red);
+		g.setColor(Color.black);
 		g.fillOval(x * width, y * height, width, height);
 	}
 	
