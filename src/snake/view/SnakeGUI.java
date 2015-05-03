@@ -1,23 +1,23 @@
-package snake.gui;
+package snake.view;
 
 import java.awt.*;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 
-import snake.build.SnakeGraphics;
+import snake.controller.SnakeGraphics;
 
-public class SnakeFrame extends JFrame {
+public class SnakeGUI extends JFrame {
 	
-	public SnakeFrame() {
+	public SnakeGUI() {
 		setLayout(new BorderLayout());
 		
 		JPanel topPanel = new JPanel();
 		topPanel.setLayout(new GridLayout());
-		topPanel.setBorder(new EmptyBorder(10,0,10,0));
+		topPanel.setBorder(new EmptyBorder(10,0,10,0));//padding around north
 		add(topPanel, BorderLayout.NORTH);
 		
-		Icon icon = new ImageIcon("snake.png");
+		Icon icon = new ImageIcon("src/snake.png");
 		JLabel image = new JLabel(icon);
 		topPanel.add(image);
 		image.setHorizontalAlignment(SwingConstants.RIGHT);
@@ -28,23 +28,25 @@ public class SnakeFrame extends JFrame {
 		
 		JPanel centerPanel = new JPanel();
 		centerPanel.setLayout(new GridLayout());
+		centerPanel.setBorder(new EmptyBorder(0,20,0,20));//padding around center
 		add(centerPanel, BorderLayout.CENTER);
 		
 		SnakeGraphics graphics = SnakeGraphics.getSnakeGraphics();
 		centerPanel.add(graphics);
 
 		JLabel end = new JLabel("Slithering...");
-		end.setBorder(new EmptyBorder(5,0,5,0));
+		end.setBorder(new EmptyBorder(5,0,5,0));//padding around south
 		add(end, BorderLayout.SOUTH);
 		end.setHorizontalAlignment(SwingConstants.CENTER);
 		
+		//shows you lose instead of slithering once game ends
 		if(graphics.isGameRun() == false) {
 			end.setText("You Lose!");
 		}	
 	}
 	
 	public static void main(String[] args) {
-		SnakeFrame frame = new SnakeFrame();
+		SnakeGUI frame = new SnakeGUI();
 		frame.pack();
 		frame.setTitle("Play Snake");
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

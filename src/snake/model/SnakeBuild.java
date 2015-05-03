@@ -1,21 +1,25 @@
-package snake.fruit;
+package snake.model;
 
 import java.awt.Color;
 import java.awt.Graphics;
 
-public class BadApple {
-private int x, y, width = 10, height = 10;
+public class SnakeBuild {
+	//snake square dimensions
+	private int x, y, width = 10, height = 10;
 	
-	public BadApple(int x, int y) {
+	public SnakeBuild(int x, int y) {
 		this.x = x;
 		this.y = y;
 	}
 	
+	//painting squares
 	public void paint(Graphics g) {
 		g.setColor(Color.black);
-		g.fillOval(x * width, y * height, width, height);
+		g.fillRect(x * width, y * height, width, height);
+		g.setColor(Color.green);
+		g.fillRect(x * width, y * height, width - 2, height - 2);
 	}
-	
+
 	public int getX() {
 		return x;
 	}

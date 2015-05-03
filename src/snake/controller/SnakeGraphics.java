@@ -1,4 +1,4 @@
-package snake.build;
+package snake.controller;
 
 import java.awt.Color;
 import java.awt.Dimension;
@@ -10,48 +10,58 @@ import java.util.Random;
 
 import javax.swing.JPanel;
 
-import snake.fruit.Apple;
-import snake.fruit.BadApple;
+import snake.model.Apple;
+import snake.model.BadApple;
+import snake.model.SnakeBuild;
 
 
 public class SnakeGraphics extends JPanel implements Runnable {
+	//Singleton pattern
 	private static SnakeGraphics graphics = null;
 	
-	final int WIDTH = 300, HEIGHT = 300;
-	private boolean gameRun = false;
-	private Thread thread;
+	//frame width/height
+	private final int WIDTH = 300, HEIGHT = 300;
 	
+	//building snake parts
 	private SnakeBuild snakePart;
 	private ArrayList<SnakeBuild> snakeBuild;
 	
+	//creating apples in grid randomly
 	private Apple apple;
 	private ArrayList<Apple> apples;
-	private Random rand;
+	private Random random;
 	
 	private BadApple badApple;
 	private ArrayList<BadApple> badApples;
 	
+	//location and size of snake start
 	private int x, y, size = 5;
 	
+	//how snake moves when key is pressed
 	private long moves;
 	private boolean right = true;
 	private boolean up = false;
 	private boolean down = false;
 	private boolean left = false;
+
+	//signals whether game is running
+	private boolean gameRun = false;
+	private Thread thread;
 	
 	private SnakeGraphics() {
-		setFocusable(true);
 		addKeyListener(new Move());
 		
 		snakeBuild = new ArrayList<SnakeBuild>();
 		apples = new ArrayList<Apple>();
 		badApples = new ArrayList<BadApple>();
-		rand = new Random();
+		random = new Random();
 		
+		setFocusable(true);
 		setPreferredSize(new Dimension(WIDTH, HEIGHT));
 		start();
 	}
 	
+	//Singleton
 	public static SnakeGraphics getSnakeGraphics() {		
 		if (graphics == null) {
 			SnakeGraphics graphics2 = new SnakeGraphics();
@@ -60,8 +70,9 @@ public class SnakeGraphics extends JPanel implements Runnable {
 		return graphics;
 	}
 	
+	//painting snake and apples
 	public void paint(Graphics g) {
-		g.clearRect(0, 0, WIDTH, HEIGHT);
+		g.clearRect(0, 0, WIDTH, HEIGHT);//clears trailing snake
 		
 		for(int i = 0; i < snakeBuild.size(); i++) {
 			snakeBuild.get(i).paint(g);
@@ -75,31 +86,35 @@ public class SnakeGraphics extends JPanel implements Runnable {
 			badApples.get(i).paint(g);
 		}
 	}
-
+	
+	//to check whether game ends to send loser message...needs work
 	public boolean isGameRun() {
 		return gameRun;
 	}
 
 	public void snakeChange() {
+		//adding snake parts to whole
 		if(snakeBuild.size() == 0) {
 			snakePart = new SnakeBuild(x, y);
 			snakeBuild.add(snakePart);
 		}
 		
+		//creates new apples randomly
 		if(apples.size() == 0) {
-			int x = rand.nextInt(29);
-			int y = rand.nextInt(29);
+			int x = random.nextInt(29);
+			int y = random.nextInt(29);
 			
 			apple = new Apple(x,y);
 			apples.add(apple);
 			
-			int x2 = rand.nextInt(29);
-			int y2 = rand.nextInt(29);
+			int x2 = random.nextInt(29);
+			int y2 = random.nextInt(29);
 			
 			badApple = new BadApple(x2,y2);
 			badApples.add(badApple);
 		}
 		
+		//removes eaten apples and increases snake size
 		for(int i = 0; i < apples.size(); i++) {
 			if(x == apples.get(i).getX() && y == apples.get(i).getY()) {
 				size++;
@@ -107,16 +122,19 @@ public class SnakeGraphics extends JPanel implements Runnable {
 			}
 		}
 		
+		//stops game when bad apples are eaten
 		for(int i = 0; i < badApples.size(); i++) {
 			if(x == badApples.get(i).getX() && y == badApples.get(i).getY()) {
 				stop();
 			}
 		}
 		
+		//stops game when borders are hit
 		if(x < 0 || x > 29 || y < 0 || y > 29) {
 			stop();
 		}
 		
+		//directs snake around grid
 		moves++;
 		if(moves > 500000) {
 			if(right) {
@@ -130,21 +148,25 @@ public class SnakeGraphics extends JPanel implements Runnable {
 			}
 			moves = 0;
 			
+			//adds to snake to enable movement
 			snakePart = new SnakeBuild(x, y);
 			snakeBuild.add(snakePart);
 			
+			//removes end of snake as it moves across grid
 			if(snakeBuild.size() > size) {
 				snakeBuild.remove(0);
 			}
 		}
 	}
 	
+	//starts game
 	public void start(){
 		gameRun = true;
 		thread = new Thread(this, "snake");
 		thread.start();
 	}
 	
+	//ends game
 	public void stop(){
 		gameRun = false;
 		try {
@@ -154,13 +176,16 @@ public class SnakeGraphics extends JPanel implements Runnable {
 		}
 	}
 	
+	//runs game, directing changes in snake and apples
 	public void run(){
 		while(gameRun) {
 			snakeChange();
 			repaint();
 		}
 	}
-
+	
+	//try implementing in separate class...failed
+	//listens to arrow presses to direct snake movement
 	public class Move implements KeyListener {
 
 		@Override

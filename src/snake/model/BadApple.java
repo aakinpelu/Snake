@@ -1,23 +1,22 @@
-package snake.build;
+package snake.model;
 
 import java.awt.Color;
 import java.awt.Graphics;
 
-public class SnakeBuild {
+public class BadApple {
+	//defines bad apple size, note: bad apple is-NOT an Apple
 	private int x, y, width = 10, height = 10;
 	
-	public SnakeBuild(int x, int y) {
+	public BadApple(int x, int y) {
 		this.x = x;
 		this.y = y;
 	}
 	
 	public void paint(Graphics g) {
 		g.setColor(Color.black);
-		g.fillRect(x * width, y * height, width, height);
-		g.setColor(Color.green);
-		g.fillRect(x * width, y * height, width - 2, height - 2);
+		g.fillOval(x * width, y * height, width, height);
 	}
-
+	
 	public int getX() {
 		return x;
 	}

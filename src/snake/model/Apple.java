@@ -1,9 +1,10 @@
-package snake.fruit;
+package snake.model;
 
 import java.awt.Color;
 import java.awt.Graphics;
 
 public class Apple {
+	//defines apple size
 	private int x, y, width = 10, height = 10;
 	
 	public Apple(int x, int y) {
